@@ -49,6 +49,7 @@ header {
       height: 8rem;
       padding: 20px;
       border-radius: 2rem;
+      cursor: pointer;
 
 }
 
@@ -77,6 +78,7 @@ header .theme img {
       justify-content: space-between;
       margin: 4rem;
       padding: 1rem;
+      cursor: pointer;
 
 }
 
@@ -120,6 +122,7 @@ padding-top: 8px;
 section {
     margin-top: -4rem;
     padding: 2rem;
+    cursor: pointer;
 }
 
 section .card-holder {
@@ -222,4 +225,54 @@ body.dark .cards {
 /* Active vs inactive */
 .cards[data-active="false"] {
   opacity: 0.5;
+}
+
+
+/* Modal background */
+.modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal box */
+.modal-box {
+  background: #3a3f55;
+  padding: 20px 30px;
+  border-radius: 12px;
+  border: 2px solid #ff6b6b;
+  text-align: center;
+  width: 400px;
+}
+
+/* Buttons */
+.modal-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn.remove {
+  background: #ff6b6b;
+  color: white;
+}
+
+.btn.cancel {
+  background: #888;
+  color: white;
 }
