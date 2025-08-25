@@ -1,23 +1,62 @@
-// === Theme toggle ===
+// ==================== THEME TOGGLE ====================
 const themeToggle = document.getElementById("theme-toggle");
 
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  themeToggle.src = document.body.classList.contains("dark")
-    ? "./assets/images/icon-sun.svg"
-    : "./assets/images/icon-moon.svg";
+
+  // Swap icon
+  if (document.body.classList.contains("dark")) {
+    themeToggle.src = "./assets/images/icon-sun.svg"; // change to sun
+  } else {
+    themeToggle.src = "./assets/images/icon-moon.svg"; // back to moon
+  }
 });
 
-// === Toggle active/inactive ===
-document.querySelectorAll(".cards .toggle").forEach(toggle => {
-  toggle.addEventListener("click", function () {
-    const card = this.closest(".cards");
-    const isActive = card.getAttribute("data-active") === "true";
-    card.setAttribute("data-active", !isActive);
+// ==================== COUNTERS + FILTER ====================
+const filterBtns = document.querySelectorAll(".filter-btn");
+const countAll = document.getElementById("countAll");
+const countActive = document.getElementById("countActive");
+const countInactive = document.getElementById("countInactive");
+
+function updateCounts() {
+  const cards = document.querySelectorAll(".cards");
+  const active = document.querySelectorAll('.cards[data-active="true"]').length;
+  const inactive = document.querySelectorAll('.cards[data-active="false"]').length;
+
+  countAll.textContent = cards.length;
+  countActive.textContent = active;
+  countInactive.textContent = inactive;
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const filter = btn.getAttribute("data-filter");
+    document.querySelectorAll(".cards").forEach(card => {
+      if (filter === "all") {
+        card.style.display = "block";
+      } else {
+        const isActive = card.getAttribute("data-active") === "true";
+        if ((filter === "active" && isActive) || (filter === "inactive" && !isActive)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      }
+    });
   });
 });
 
-// === Remove with modal ===
+// ==================== TOGGLE ACTIVE/INACTIVE ====================
+document.querySelectorAll(".toggle").forEach(toggle => {
+  toggle.addEventListener("click", (e) => {
+    const card = e.target.closest(".cards");
+    const isActive = card.getAttribute("data-active") === "true";
+    card.setAttribute("data-active", !isActive);
+    updateCounts();
+  });
+});
+
+// ==================== MODAL HANDLING ====================
 document.querySelectorAll(".cards").forEach(card => {
   const removeBtn = card.querySelector(".remove-btn");
   const modal = card.querySelector(".modal");
@@ -26,42 +65,28 @@ document.querySelectorAll(".cards").forEach(card => {
 
   // Open modal
   removeBtn.addEventListener("click", () => {
-    modal.classList.add("show");
+    modal.style.display = "flex";
   });
 
   // Confirm remove
   confirmBtn.addEventListener("click", () => {
     card.remove();
+    modal.style.display = "none";
+    updateCounts();
   });
 
   // Cancel remove
   cancelBtn.addEventListener("click", () => {
-    modal.classList.remove("show");
+    modal.style.display = "none";
   });
 
-  // Close when clicking outside modal-box
+  // Close modal when clicking outside
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) modal.classList.remove("show");
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
   });
 });
 
-// === Filter buttons ===
-const filterButtons = document.querySelectorAll(".header-right .buttons p");
-filterButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const filter = btn.textContent.trim().toLowerCase();
-    const cards = document.querySelectorAll(".cards");
-
-    cards.forEach(card => {
-      const isActive = card.getAttribute("data-active") === "true";
-
-      if (filter === "all") {
-        card.style.display = "block";
-      } else if (filter.startsWith("active")) {
-        card.style.display = isActive ? "block" : "none";
-      } else if (filter.startsWith("inactive")) {
-        card.style.display = !isActive ? "block" : "none";
-      }
-    });
-  });
-});
+// ==================== INITIALIZE ====================
+updateCounts();
